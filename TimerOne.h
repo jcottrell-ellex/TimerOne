@@ -187,31 +187,31 @@ class TimerOne
     }
     void setPeriod(unsigned long microseconds) __attribute__((always_inline)) {
 	const unsigned long cycles = ((F_CPU/100000 * microseconds) / 20);
-	if (cycles < TIMER1_RESOLUTION) {
+	if (cycles < (TIMER1_RESOLUTION - 1)) {
 		clockSelectBits = _BV(CS10);
-		pwmPeriod = cycles;
+		pwmPeriod = cycles + 1;
 	} else
-	if (cycles < TIMER1_RESOLUTION * 8) {
+	if (cycles < (TIMER1_RESOLUTION - 1) * 8) {
 		clockSelectBits = _BV(CS11);
-		pwmPeriod = cycles / 8;
+		pwmPeriod = cycles / 8 + 1;
 	} else
-	if (cycles < TIMER1_RESOLUTION * 64) {
+	if (cycles < (TIMER1_RESOLUTION - 1) * 64) {
 		clockSelectBits = _BV(CS11) | _BV(CS10);
-		pwmPeriod = cycles / 64;
+		pwmPeriod = cycles / 64 + 1;
 	} else
-	if (cycles < TIMER1_RESOLUTION * 256) {
+	if (cycles < (TIMER1_RESOLUTION - 1) * 256) {
 		clockSelectBits = _BV(CS12);
-		pwmPeriod = cycles / 256;
+		pwmPeriod = cycles / 256 + 1;
 	} else
-	if (cycles < TIMER1_RESOLUTION * 1024) {
+	if (cycles < (TIMER1_RESOLUTION - 1) * 1024) {
 		clockSelectBits = _BV(CS12) | _BV(CS10);
-		pwmPeriod = cycles / 1024;
+		pwmPeriod = cycles / 1024 + 1;
 	} else {
 		clockSelectBits = _BV(CS12) | _BV(CS10);
 		pwmPeriod = TIMER1_RESOLUTION - 1;
 	}
 	ICR1 = pwmPeriod;
-	TCCR1B = _BV(WGM13) | clockSelectBits;
+	TCCR1B = _BV(WGM13);
     }
 
     //****************************
@@ -219,7 +219,7 @@ class TimerOne
     //****************************
     void start() __attribute__((always_inline)) {
 	TCCR1B = 0;
-	TCNT1 = 0;		// TODO: does this cause an undesired interrupt?
+	TCNT1 = 1;		// TODO: does this cause an undesired interrupt?
 	resume();
     }
     void stop() __attribute__((always_inline)) {
