@@ -1,5 +1,13 @@
 #TimerOne Library#
 
+======================
+Slight modification from Paul Stoffregen's modified TimerOne, available at: https://github.com/PaulStoffregen/TimerOne
+
+Added workaround for "TCNT1 = 0;" causing an unwanted immediate interrupt
+
+======================
+
+
 Paul Stoffregen's modified TimerOne.  This version provides 2 main benefits:
 
 1: Optimized inline functions - much faster for the most common usage  
